@@ -8,11 +8,13 @@ import {
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { createUserDto } from './dto/createUser.dto';
 import { updateUserDto } from './dto/updateUser.dto';
-
+import { ResponseInterceptor } from 'src/common/response.interceptor';
+@UseInterceptors(new ResponseInterceptor())
 @Controller('user')
 export class UserController {
   constructor(private usersService: UsersService) {}
@@ -21,6 +23,7 @@ export class UserController {
   async findAll() {
     try {
       const data = await this.usersService.findAll();
+      console.log('data user : ', data);
       return {
         message: 'Success',
         data: data,

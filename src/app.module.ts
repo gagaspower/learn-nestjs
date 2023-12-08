@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user/users.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { ResponseInterceptor } from './common/response.interceptor';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -23,13 +22,9 @@ import { ResponseInterceptor } from './common/response.interceptor';
       }),
     }),
     UserModule,
+    ProductModule,
   ],
   controllers: [],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ResponseInterceptor,
-    },
-  ],
+  providers: [],
 })
 export class AppModule {}

@@ -11,7 +11,7 @@ import { catchError, map } from 'rxjs/operators';
 import * as fs from 'fs';
 
 @Injectable()
-export class ResponseInterceptor implements NestInterceptor {
+export class ProductInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     return next.handle().pipe(
       map((res: unknown) => this.responseHandler(res, context)),
@@ -30,6 +30,13 @@ export class ResponseInterceptor implements NestInterceptor {
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
+
+    // Hapus file jika terkait dengan kesalahan validasi atau kondisi tertentu
+    const file = request.file; // Atau sesuaikan dengan properti yang menunjukkan file
+    if (file && file.filename) {
+      const pathImage = `./public/uploads/${file.filename}`;
+      fs.unlinkSync(pathImage);
+    }
 
     response.status(status).json({
       status: false,
